@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coffee — Obsidian Coffee Roasters</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='5' fill='%230e0d0c'/><path d='M12 3l7 9-7 9-7-9z' fill='%23c9a86a'/></svg>">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body data-page="shop">
+<div id="header"></div>
+
+<main class="container">
+  <div class="crumbs" style="margin-top:36px"><a href="index.html">Home</a> / <a href="shop.html">Shop</a> / <span id="crumb"></span></div>
+  <div class="pdp" id="pdp"></div>
+
+  <section style="padding-top:0">
+    <div class="section-head"><div><span class="eyebrow">Complete the Ritual</span><h2>You may also like</h2></div><a href="shop.html" class="btn btn-line">Shop all →</a></div>
+    <div class="products" id="related"></div>
+  </section>
+</main>
+
+<div id="footer"></div>
+<script src="assets/app.js"></script>
+<script>
+const p = byId(new URLSearchParams(location.search).get('id')) || PRODUCTS[0];
+document.title = `${p.name} — ${p.type} | Obsidian Coffee`;
+document.getElementById('crumb').textContent = p.name;
+const sel = { size: '12oz', grind: 'Whole Bean', sub: 0, freq: 3, qty: 1 };
+const shots = ['bag', '1773118360501-00f979fd9322', '1758221052634-33f352d1318b', '1609050471053-8636409f9f5b'];
+const ratio = { 'Whole Bean': ['—', '—'], Espresso: ['18 g', '36 g'], Drip: ['30 g', '500 g'], 'Pour-Over': ['15 g', '250 g'], 'French Press': ['30 g', '480 g'] };
+
+document.getElementById('pdp').innerHTML = `
+  <div class="pdp-gallery">
+    <div class="pdp-thumbs">${shots.map((s, i) => `<button class="${i ? '' : 'on'}" data-shot="${s}" aria-label="Image ${i + 1}">${s === 'bag' ? bagSVG(p) : `<img src="${IMG(s, 200)}" alt="">`}</button>`).join('')}</div>
+    <div class="pdp-main" id="main"></div>
+  </div>
+  <div>
+    <span class="eyebrow">${p.cat} · ${p.roast} Roast</span>
+    <h1>${p.name}</h1>
+    <div class="sub">${p.type} — ${p.origin}</div>
+    <div class="pdp-rating"><span class="stars">★★★★★</span><span>${p.rating} · <a href="#" id="toReviews" style="text-decoration:underline">${p.reviews.toLocaleString()} reviews</a></span></div>
+    <div class="pdp-price" id="price"></div>
+    <p class="muted" style="margin-top:1rem">${p.desc}</p>
+
+    <div class="opt"><div class="opt-label">Size <span id="sizeLbl"></span></div>
+      <div class="choices" id="sizes">${SIZES.map(s => `<button class="choice ${s.k === sel.size ? 'on' : ''}" data-size="${s.k}">${s.label}${s.note ? `<small>${s.note}</small>` : '<small>&nbsp;</small>'}</button>`).join('')}</div></div>
+    <div class="opt"><div class="opt-label">Grind <span id="grindLbl">Whole Bean</span></div>
+      <div class="choices" id="grinds">${GRINDS.map(g => `<button class="choice ${g === sel.grind ? 'on' : ''}" data-grind="${g}">${g}</button>`).join('')}</div></div>
+
+    <div class="purchase" id="ptype">
+      <div class="ptype on" data-sub="0"><span class="radio"></span><div class="t"><b>One-time purchase</b><small>Roasted &amp; shipped within 24h</small></div><span id="oneP"></span></div>
+      <div class="ptype" data-sub="1"><span class="radio"></span><div class="t"><b>Subscribe &amp; save 15% <span class="save-tag" style="margin-left:.4rem">Best value</span></b><small>Free shipping · skip or cancel anytime</small><br>
+        <select id="freq" aria-label="Delivery frequency"><option value="2">Every 2 weeks</option><option value="3" selected>Every 3 weeks</option><option value="4">Every 4 weeks</option><option value="6">Every 6 weeks</option></select></div><span id="subP"></span></div>
+    </div>
+
+    <div class="buy-row">
+      <div class="qty"><button id="minus" aria-label="Decrease quantity">−</button><span id="qty">1</span><button id="plus" aria-label="Increase quantity">+</button></div>
+      <button class="btn btn-gold" id="add"></button>
+    </div>
+    <div class="stock ${p.stock < 10 ? 'low' : ''}"><i></i>${p.stock < 10 ? `Only ${p.stock} bags left — roasting ends soon` : 'In stock · next roast ships tomorrow'}</div>
+
+    <div class="perks">
+      <div><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M3 7h11v10H3zM14 10h4l3 3v4h-7"/><circle cx="7" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/></svg>Free shipping over $50</div>
+      <div><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M12 2c3 4-3 6 0 11 2-2 4-3 3-7 3 3 3 10-3 12-6-2-6-10 0-16z"/></svg>Roasted to order</div>
+      <div><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>30-day taste guarantee</div>
+    </div>
+
+    <div class="tabs" id="tabs">
+      <div class="tabs-nav"><button class="on" data-t="details">Details</button><button data-t="brew">Brew Guide</button><button data-t="reviews">Reviews (${p.reviews.toLocaleString()})</button></div>
+      <div class="tab-panel on" data-p="details">
+        <div class="spec-list">
+          <div><small>Origin</small><span>${p.origin}</span></div><div><small>Process</small><span>${p.process}</span></div>
+          <div><small>Altitude</small><span>${p.altitude}</span></div><div><small>Varietal</small><span>${p.varietal}</span></div>
+        </div>
+        <div class="flavor">${Object.entries(p.flavor).map(([k, v]) => `<div><span>${k}</span><span class="bar"><i style="width:${v}%"></i></span></div>`).join('')}</div>
+      </div>
+      <div class="tab-panel" data-p="brew">
+        <div class="recipe"><div><strong>1:16</strong>Ratio</div><div><strong>200°F</strong>Water</div><div><strong>3:30</strong>Brew time</div><div><strong>Med-fine</strong>Grind</div></div>
+        <p>Bloom with twice the coffee’s weight in water for 45 seconds, then pour in slow spirals to your target weight. Expect notes of ${p.notes.join(', ').toLowerCase()}.</p>
+      </div>
+      <div class="tab-panel" data-p="reviews">
+        <div class="review-item"><span class="stars">★★★★★</span><p><b>Incredible.</b> Exactly the notes on the bag — ${p.notes[0].toLowerCase()} all the way. — <i>Megan T., verified buyer</i></p></div>
+        <div class="review-item"><span class="stars">★★★★★</span><p><b>My new favorite.</b> Arrived two days after roasting, smelled amazing when I opened the bag. — <i>Chris P., verified buyer</i></p></div>
+        <div class="review-item"><span class="stars">★★★★☆</span><p><b>Great coffee, pricey.</b> But honestly worth it for weekend brewing. — <i>Jordan L., verified buyer</i></p></div>
+      </div>
+    </div>
+  </div>`;
+
+const main = document.getElementById('main');
+const showShot = s => main.innerHTML = s === 'bag' ? bagSVG(p, { size: SIZES.find(x => x.k === sel.size).label.toUpperCase() }) : `<img src="${IMG(s, 1100)}" alt="${p.name}">`;
+let shot = 'bag'; showShot(shot);
+document.querySelectorAll('[data-shot]').forEach(b => b.onclick = () => { document.querySelectorAll('[data-shot]').forEach(x => x.classList.toggle('on', x === b)); shot = b.dataset.shot; showShot(shot); });
+main.onclick = () => main.classList.toggle('zoom');
+main.onmousemove = e => { const r = main.getBoundingClientRect(); main.firstElementChild.style.transformOrigin = `${(e.clientX - r.left) / r.width * 100}% ${(e.clientY - r.top) / r.height * 100}%`; };
+main.onmouseleave = () => main.classList.remove('zoom');
+
+function refresh() {
+  const one = Cart.unit({ id: p.id, size: sel.size }), subU = Cart.unit({ id: p.id, size: sel.size, sub: 1 });
+  const u = sel.sub ? subU : one;
+  document.getElementById('price').innerHTML = sel.sub ? `${money(subU)} <s>${money(one)}</s> <span class="save-tag">SAVE 15%</span>` : money(one);
+  document.getElementById('oneP').textContent = money(one);
+  document.getElementById('subP').textContent = money(subU);
+  document.getElementById('sizeLbl').textContent = SIZES.find(s => s.k === sel.size).label;
+  document.getElementById('qty').textContent = sel.qty;
+  document.getElementById('add').textContent = `${sel.sub ? 'Subscribe' : 'Add to Cart'} · ${money(u * sel.qty)}`;
+  if (shot === 'bag') showShot('bag');
+}
+document.querySelectorAll('[data-size]').forEach(b => b.onclick = () => { sel.size = b.dataset.size; document.querySelectorAll('[data-size]').forEach(x => x.classList.toggle('on', x === b)); refresh(); });
+document.querySelectorAll('[data-grind]').forEach(b => b.onclick = () => { sel.grind = b.dataset.grind; document.getElementById('grindLbl').textContent = sel.grind; document.querySelectorAll('[data-grind]').forEach(x => x.classList.toggle('on', x === b)); refresh(); });
+document.querySelectorAll('.ptype').forEach(b => b.onclick = e => { if (e.target.tagName === 'SELECT') return; sel.sub = +b.dataset.sub; document.querySelectorAll('.ptype').forEach(x => x.classList.toggle('on', x === b)); refresh(); });
+document.getElementById('freq').onchange = e => { sel.freq = +e.target.value; };
+document.getElementById('minus').onclick = () => { sel.qty = Math.max(1, sel.qty - 1); refresh(); };
+document.getElementById('plus').onclick = () => { sel.qty = Math.min(20, sel.qty + 1); refresh(); };
+document.getElementById('add').onclick = () => {
+  Cart.add({ id: p.id, size: sel.size, grind: sel.grind, qty: sel.qty, sub: sel.sub ? sel.freq : 0 });
+  updateCount(true); openCart();
+};
+document.querySelectorAll('.tabs-nav button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.tabs-nav button').forEach(x => x.classList.toggle('on', x === b));
+  document.querySelectorAll('.tab-panel').forEach(x => x.classList.toggle('on', x.dataset.p === b.dataset.t));
+});
+document.getElementById('toReviews').onclick = e => { e.preventDefault(); document.querySelector('[data-t="reviews"]').click(); document.getElementById('tabs').scrollIntoView({ behavior: 'smooth', block: 'center' }); };
+refresh();
+document.getElementById('related').innerHTML = PRODUCTS.filter(x => x.id !== p.id && (x.roast === p.roast || x.cat === p.cat)).concat(PRODUCTS.filter(x => x.id !== p.id)).filter((x, i, a) => a.indexOf(x) === i).slice(0, 4).map(productCard).join('');
+observeReveals();
+</script>
+</body>
+</html>

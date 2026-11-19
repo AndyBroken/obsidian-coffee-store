@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coffee Subscription Quiz — Obsidian Coffee Roasters</title>
+<meta name="description" content="Answer 3 quick questions and get matched with a coffee subscription you'll love. Save 15% and ship free.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='5' fill='%230e0d0c'/><path d='M12 3l7 9-7 9-7-9z' fill='%23c9a86a'/></svg>">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body data-page="subscribe">
+<div id="header"></div>
+
+<main class="container">
+  <div class="page-hero" style="text-align:center;padding-bottom:30px">
+    <span class="eyebrow">Obsidian Club · Save 15%</span>
+    <h1>Find your perfect coffee</h1>
+    <p style="margin:auto">Three quick questions. One great match. Delivered fresh on your schedule.</p>
+  </div>
+  <div class="quiz">
+    <div class="progress"><i id="bar" style="width:0%"></i></div>
+
+    <div class="q on" data-q="brew"><span class="eyebrow">Question 1 of 3</span><h2>How do you brew at home?</h2>
+      <div class="opts">
+        <button class="optc" data-v="Espresso"><div class="ico">☕</div><b>Espresso</b><small>Machine, lattes &amp; flat whites</small></button>
+        <button class="optc" data-v="Pour-Over"><div class="ico">🫖</div><b>Pour-over</b><small>V60, Chemex, Kalita</small></button>
+        <button class="optc" data-v="Drip"><div class="ico">⏱️</div><b>Drip machine</b><small>Easy mornings, big batches</small></button>
+        <button class="optc" data-v="French Press"><div class="ico">🧊</div><b>French press / cold brew</b><small>Rich, full-bodied</small></button>
+      </div></div>
+
+    <div class="q" data-q="taste"><span class="eyebrow">Question 2 of 3</span><h2>Which flavors sound best?</h2>
+      <div class="opts">
+        <button class="optc" data-v="choc"><div class="ico">🍫</div><b>Chocolate &amp; caramel</b><small>Classic, cozy, sweet</small></button>
+        <button class="optc" data-v="fruit"><div class="ico">🫐</div><b>Fruity &amp; floral</b><small>Bright, juicy, complex</small></button>
+        <button class="optc" data-v="bold"><div class="ico">🌲</div><b>Bold &amp; earthy</b><small>Smoky, spicy, heavy</small></button>
+        <button class="optc" data-v="decaf"><div class="ico">🌙</div><b>No caffeine, please</b><small>All the flavor, none of the buzz</small></button>
+      </div></div>
+
+    <div class="q" data-q="amount"><span class="eyebrow">Question 3 of 3</span><h2>How much coffee do you drink?</h2>
+      <div class="opts">
+        <button class="optc" data-v="12oz|4"><div class="ico">1</div><b>A cup a day</b><small>12 oz every 4 weeks</small></button>
+        <button class="optc" data-v="12oz|2"><div class="ico">2–3</div><b>A few cups a day</b><small>12 oz every 2 weeks</small></button>
+        <button class="optc" data-v="2lb|3"><div class="ico">4+</div><b>The whole household</b><small>2 lb every 3 weeks</small></button>
+      </div></div>
+
+    <div class="result" id="result"></div>
+  </div>
+</main>
+
+<div id="footer"></div>
+<script src="assets/app.js"></script>
+<script>
+const ans = {}, order = ['brew', 'taste', 'amount'];
+const bar = document.getElementById('bar');
+document.querySelectorAll('.q').forEach((q, i) => q.querySelectorAll('.optc').forEach(b => b.onclick = () => {
+  ans[q.dataset.q] = b.dataset.v; bar.style.width = ((i + 1) / 3 * 100) + '%';
+  q.classList.remove('on');
+  if (i < 2) document.querySelectorAll('.q')[i + 1].classList.add('on'); else showResult();
+  scrollTo({ top: 0, behavior: 'smooth' });
+}));
+function pick() {
+  if (ans.taste === 'decaf') return byId('halo');
+  if (ans.taste === 'fruit') return ans.brew === 'Espresso' ? byId('meridian') : byId('solstice');
+  if (ans.taste === 'bold') return ans.brew === 'Espresso' ? byId('eclipse') : byId('nocturne');
+  if (ans.brew === 'Espresso') return byId('eclipse');
+  if (ans.brew === 'French Press') return byId('cascade');
+  return byId('meridian');
+}
+function showResult() {
+  const p = pick(), [size, freq] = ans.amount.split('|'), grind = ans.brew === 'Drip' ? 'Drip' : ans.brew === 'Pour-Over' ? 'Pour-Over' : ans.brew;
+  let f = +freq;
+  const r = document.getElementById('result');
+  const price = () => Cart.unit({ id: p.id, size, sub: 1 });
+  r.innerHTML = `<div class="media">${bagSVG(p, { size: SIZES.find(s => s.k === size).label.toUpperCase() })}</div>
+    <div><span class="eyebrow">Your match</span><h2>${p.name}</h2><p class="muted">${p.type} · ${p.origin}</p>
+      <p style="margin-top:1.2rem">${p.desc} Expect notes of <b>${p.notes.join(', ').toLowerCase()}</b>.</p>
+      <p class="muted" style="margin-top:1rem">Ground for <b style="color:var(--text)">${grind}</b> · ${SIZES.find(s => s.k === size).label} bag</p>
+      <div class="freq" id="freq">${[2, 3, 4, 6].map(n => `<button class="choice ${n === f ? 'on' : ''}" data-f="${n}">Every ${n} wks</button>`).join('')}</div>
+      <div class="pdp-price">${money(price())} <s>${money(Cart.unit({ id: p.id, size }))}</s> <span class="save-tag">SAVE 15%</span></div>
+      <p class="muted" style="font-size:.85rem;margin:.4rem 0 1.6rem">per delivery · free shipping · cancel anytime</p>
+      <div style="display:flex;gap:.7rem;flex-wrap:wrap"><button class="btn btn-gold" id="start">Start My Subscription →</button><button class="btn btn-line" id="retake">Retake quiz</button></div>
+    </div>`;
+  r.classList.add('on');
+  r.querySelectorAll('[data-f]').forEach(b => b.onclick = () => { f = +b.dataset.f; r.querySelectorAll('[data-f]').forEach(x => x.classList.toggle('on', x === b)); });
+  document.getElementById('start').onclick = () => { Cart.add({ id: p.id, size, grind, qty: 1, sub: f }); updateCount(true); openCart(); };
+  document.getElementById('retake').onclick = () => { r.classList.remove('on'); bar.style.width = '0%'; document.querySelector('.q').classList.add('on'); };
+}
+</script>
+</body>
+</html>

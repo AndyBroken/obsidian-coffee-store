@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkout — Obsidian Coffee Roasters</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='5' fill='%230e0d0c'/><path d='M12 3l7 9-7 9-7-9z' fill='%23c9a86a'/></svg>">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body data-page="checkout">
+<div id="header"></div>
+
+<main class="container" id="app"></main>
+
+<div id="footer"></div>
+<script src="assets/app.js"></script>
+<script>
+const app = document.getElementById('app');
+const STATES = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'];
+const co = { step: 1, ship: 'standard', promo: store.get('obs-promo', ''), info: {} };
+const PROMOS = { WELCOME10: .10, OBSIDIAN20: .20 };
+
+function totals() {
+  const sub = Cart.subtotal(), disc = PROMOS[co.promo] ? sub * PROMOS[co.promo] : 0;
+  const hasSub = Cart.items.some(i => i.sub), freeStd = sub - disc >= FREE_SHIP || hasSub;
+  const ship = co.ship === 'express' ? 12.95 : (freeStd ? 0 : 5.95);
+  const tax = Math.round((sub - disc) * 0.08875 * 100) / 100;
+  return { sub, disc, ship, tax, total: sub - disc + ship + tax, freeStd };
+}
+
+function summary() {
+  const t = totals();
+  return `<aside class="summary">
+    <h3>Order summary</h3>
+    ${Cart.items.map(i => { const p = byId(i.id); return `<div class="sum-item"><div class="thumb">${bagSVG(p)}<span class="badge">${i.qty}</span></div><div><b>${p.name}</b><small>${itemMeta(i)}</small></div><span>${money(Cart.unit(i) * i.qty)}</span></div>`; }).join('')}
+    <div class="promo"><input class="field" id="promo" placeholder="Promo code" value="${co.promo}" aria-label="Promo code"><button class="btn btn-line" id="applyPromo">Apply</button></div>
+    <div class="sum-rows">
+      <div class="row"><span class="muted">Subtotal</span><span>${money(t.sub)}</span></div>
+      ${t.disc ? `<div class="row" style="color:var(--gold)"><span>Discount (${co.promo})</span><span>−${money(t.disc)}</span></div>` : ''}
+      <div class="row"><span class="muted">Shipping</span><span>${co.step < 2 ? (t.freeStd ? 'Free' : 'Calculated next') : (t.ship ? money(t.ship) : 'Free')}</span></div>
+      <div class="row"><span class="muted">Estimated tax</span><span>${money(t.tax)}</span></div>
+      <div class="row total"><span>Total</span><span>USD ${money(t.total)}</span></div>
+    </div>
+  </aside>`;
+}
+const stepsBar = () => `<div class="steps">${['Information', 'Shipping', 'Payment'].map((s, i) => `<span class="${co.step === i + 1 ? 'on' : co.step > i + 1 ? 'done' : ''}"><b>${co.step > i + 1 ? '✓' : i + 1}</b>${s}</span>`).join('<i></i>')}</div>`;
+const f = (id, label, opts = {}) => `<div class="${opts.full ? 'full' : ''}"><label for="${id}">${label}</label>${opts.select
+  ? `<select class="field" id="${id}">${opts.select.map(o => `<option ${co.info[id] === o ? 'selected' : ''}>${o}</option>`).join('')}</select>`
+  : `<input class="field" id="${id}" type="${opts.type || 'text'}" placeholder="${opts.ph || ''}" value="${co.info[id] || ''}" ${opts.req === false ? '' : 'required'} autocomplete="${opts.ac || 'off'}">`}<div class="err">${opts.err || 'Required'}</div></div>`;
+
+function render() {
+  if (!Cart.items.length && co.step < 4) {
+    app.innerHTML = `<div class="confirm"><h1>Your cart is empty</h1><p>Add a coffee or two, then come back to check out.</p><a href="shop.html" class="btn btn-gold" style="margin-top:2rem">Shop Coffee</a></div>`; return;
+  }
+  if (co.step === 4) return;
+  let body = '';
+  if (co.step === 1) body = `
+    <div class="co-step on"><h2>Contact &amp; delivery</h2>
+      <div class="fgrid">
+        ${f('email', 'Email', { full: 1, type: 'email', ph: 'you@email.com', err: 'Enter a valid email', ac: 'email' })}
+        ${f('first', 'First name', { ph: 'Jane', ac: 'given-name' })}${f('last', 'Last name', { ph: 'Doe', ac: 'family-name' })}
+        ${f('addr', 'Street address', { full: 1, ph: '123 Main St', ac: 'address-line1' })}
+        ${f('apt', 'Apt, suite (optional)', { full: 1, req: false, ph: 'Apt 4B' })}
+        ${f('city', 'City', { ph: 'Brooklyn', ac: 'address-level2' })}
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">${f('state', 'State', { select: STATES })}${f('zip', 'ZIP', { ph: '11201', err: '5-digit ZIP', ac: 'postal-code' })}</div>
+      </div>
+      <div class="co-nav"><a href="shop.html">← Continue shopping</a><button class="btn btn-gold" id="next">Continue to shipping</button></div>
+    </div>`;
+  if (co.step === 2) { const t = totals(); body = `
+    <div class="co-step on"><h2>Shipping method</h2>
+      <p class="muted" style="margin-bottom:1.2rem">Shipping to ${co.info.first} ${co.info.last}, ${co.info.addr}, ${co.info.city}, ${co.info.state} ${co.info.zip}</p>
+      <label class="ship-opt ${co.ship === 'standard' ? 'on' : ''}" data-ship="standard"><span class="radio" style="width:20px;height:20px;border-radius:50%;border:1.5px solid var(--gold);display:grid;place-items:center">${co.ship === 'standard' ? '<i style="width:10px;height:10px;border-radius:50%;background:var(--gold)"></i>' : ''}</span><div class="t"><b>Standard</b><small>USPS Ground · 3–5 business days</small></div><b>${t.freeStd ? 'Free' : '$5.95'}</b></label>
+      <label class="ship-opt ${co.ship === 'express' ? 'on' : ''}" data-ship="express"><span class="radio" style="width:20px;height:20px;border-radius:50%;border:1.5px solid var(--gold);display:grid;place-items:center">${co.ship === 'express' ? '<i style="width:10px;height:10px;border-radius:50%;background:var(--gold)"></i>' : ''}</span><div class="t"><b>Express</b><small>UPS 2nd Day Air · 1–2 business days</small></div><b>$12.95</b></label>
+      <div class="co-nav"><button class="back" data-go="1">← Return to information</button><button class="btn btn-gold" id="next">Continue to payment</button></div>
+    </div>`; }
+  if (co.step === 3) body = `
+    <div class="co-step on"><h2>Payment</h2>
+      <div class="demo-note"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><div><b>Demo store — no real payment is taken.</b><br>Card fields are pre-filled with a test card and nothing is sent anywhere. In production this step connects to Stripe or Shopify Payments.</div></div>
+      <div class="fgrid">
+        <div class="full"><label>Card number</label><input class="field" value="4242 4242 4242 4242" disabled></div>
+        <div><label>Expiration</label><input class="field" value="12 / 29" disabled></div>
+        <div><label>Security code</label><input class="field" value="•••" disabled></div>
+        <div class="full"><label>Name on card</label><input class="field" value="${co.info.first} ${co.info.last}" disabled></div>
+      </div>
+      <label class="check" style="margin-top:1.2rem"><input type="checkbox" checked> Billing address same as shipping</label>
+      <div class="co-nav"><button class="back" data-go="2">← Return to shipping</button><button class="btn btn-gold" id="next">Place order · ${money(totals().total)}</button></div>
+    </div>`;
+  app.innerHTML = `<div class="crumbs" style="margin-top:36px"><a href="index.html">Home</a> / <a href="#" onclick="openCart();return false">Cart</a> / Checkout</div>
+    <div class="checkout"><div>${stepsBar()}${body}</div>${summary()}</div>`;
+  bind();
+}
+
+function collect() { app.querySelectorAll('.co-step input.field,.co-step select.field').forEach(el => co.info[el.id] = el.value.trim()); }
+function validStep1() {
+  let ok = true;
+  app.querySelectorAll('.co-step [required]').forEach(el => {
+    let bad = !el.value.trim();
+    if (el.id === 'email') bad = !/^\S+@\S+\.\S+$/.test(el.value);
+    if (el.id === 'zip') bad = !/^\d{5}$/.test(el.value.trim());
+    el.classList.toggle('invalid', bad); if (bad) ok = false;
+  });
+  if (!ok) app.querySelector('.invalid')?.focus();
+  return ok;
+}
+function bind() {
+  const next = document.getElementById('next');
+  if (next) next.onclick = () => {
+    if (co.step === 1) { if (!validStep1()) return; collect(); }
+    if (co.step === 3) return place();
+    co.step++; render(); scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  app.querySelectorAll('[data-go]').forEach(b => b.onclick = () => { co.step = +b.dataset.go; render(); });
+  app.querySelectorAll('[data-ship]').forEach(b => b.onclick = e => { e.preventDefault(); co.ship = b.dataset.ship; render(); });
+  document.getElementById('applyPromo').onclick = () => {
+    if (co.step === 1) collect();
+    const code = document.getElementById('promo').value.trim().toUpperCase();
+    if (PROMOS[code]) { co.promo = code; store.set('obs-promo', code); toast(`Code ${code} applied — ${PROMOS[code] * 100}% off`); }
+    else { co.promo = ''; toast('That code isn’t valid. Try WELCOME10'); }
+    render();
+  };
+}
+function place() {
+  const t = totals(), num = 'OBS-' + Math.floor(100000 + Math.random() * 900000), items = Cart.count(), hasSub = Cart.items.some(i => i.sub);
+  const eta = new Date(Date.now() + (co.ship === 'express' ? 2 : 5) * 864e5).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  co.step = 4; Cart.clear(); store.set('obs-promo', '');
+  app.innerHTML = `<div class="confirm">
+    <div class="check-circle"><svg width="44" height="44" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></div>
+    <span class="eyebrow">Order confirmed</span>
+    <h1>Thank you, ${co.info.first}!</h1>
+    <p>Your coffee goes into the roaster tomorrow morning. A confirmation was sent to <b style="color:var(--text)">${co.info.email}</b>.</p>
+    <div class="order-box">
+      <div><small>Order number</small><b>${num}</b></div>
+      <div><small>Total</small><b>${money(t.total)}</b></div>
+      <div><small>Items</small><b>${items} bag${items > 1 ? 's' : ''}${hasSub ? ' · incl. subscription' : ''}</b></div>
+      <div><small>Estimated delivery</small><b>${eta}</b></div>
+    </div>
+    <a href="shop.html" class="btn btn-gold">Continue Shopping</a>
+    <p style="margin-top:1.6rem;font-size:.82rem">Demo order — nothing was charged or shipped.</p>
+  </div>`;
+  scrollTo({ top: 0 });
+}
+// keep page in sync when the cart drawer changes quantities
+const _save = Cart.save.bind(Cart);
+Cart.save = function () { _save(); if (co.step < 4) { if (co.step === 1) collect(); render(); } };
+render();
+</script>
+</body>
+</html>

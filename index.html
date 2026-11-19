@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Obsidian Coffee Roasters — Rare Coffee, Roasted with Obsession</title>
+<meta name="description" content="Rare, traceable specialty coffee roasted to order in Brooklyn, NY. Shop single origins, reserve lots and flexible subscriptions.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='5' fill='%230e0d0c'/><path d='M12 3l7 9-7 9-7-9z' fill='%23c9a86a'/></svg>">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body data-page="home">
+<div id="header"></div>
+
+<main>
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="container">
+    <span class="eyebrow fade-up">Brooklyn, New York · Est. 2018</span>
+    <h1><span class="split-line"><span>Rare coffee,</span></span><span class="split-line"><span>roasted with</span></span><span class="split-line"><span><em>obsession.</em></span></span></h1>
+    <div class="hero-row">
+      <div class="fade-up">
+        <p>Traceable micro-lots from the world’s most remarkable farms — roasted to order in tiny batches and shipped within 24 hours.</p>
+        <div class="hero-actions">
+          <a href="shop.html" class="btn btn-gold">Shop the Collection →</a>
+          <a href="subscribe.html" class="btn btn-line">Find Your Coffee</a>
+        </div>
+      </div>
+      <div class="hero-stats fade-up">
+        <div><strong>92+</strong><span>Avg. cupping score</span></div>
+        <div><strong>24h</strong><span>Roast to ship</span></div>
+        <div><strong>4.9</strong><span>14k+ reviews</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker"><div class="marquee" id="notesTicker"></div></div>
+
+<section>
+  <div class="container">
+    <div class="section-head reveal">
+      <div><span class="eyebrow">The Collection</span><h2>This season’s coffees</h2></div>
+      <a href="shop.html" class="btn btn-line">View all 8 coffees →</a>
+    </div>
+    <div class="products" id="featured"></div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="container">
+    <div class="sub-banner reveal">
+      <div class="copy">
+        <span class="eyebrow">Obsidian Club</span>
+        <h2>Never run out of great coffee.</h2>
+        <p>Take our 30-second quiz and we’ll match you with coffees you’ll love — delivered on your schedule.</p>
+        <ul>
+          <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>Save 15% on every bag, forever</li>
+          <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>Free shipping on every delivery</li>
+          <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>Skip, swap or cancel anytime</li>
+        </ul>
+        <a href="subscribe.html" class="btn btn-gold">Take the Coffee Quiz →</a>
+      </div>
+      <div class="img" role="img" aria-label="Pour-over coffee"></div>
+    </div>
+  </div>
+</section>
+
+<section id="process" style="padding-top:0">
+  <div class="container">
+    <div class="section-head reveal">
+      <div><span class="eyebrow">Our Craft</span><h2>Seed to cup, without shortcuts</h2></div>
+      <p>We buy less than 1% of the coffee we taste. Everything we sell scores 87+ and is traceable to a single farm or washing station.</p>
+    </div>
+    <div class="process">
+      <article class="reveal"><img src="https://images.unsplash.com/photo-1465176728568-7da7e336b1e9?auto=format&fit=crop&w=900&q=80" alt="Coffee sacks at origin" loading="lazy"><div class="txt"><b>01</b><h3>Source</h3><p>Direct partnerships with 23 producers. We pay 3× the commodity price — published every year.</p></div></article>
+      <article class="reveal"><img src="https://images.unsplash.com/photo-1777383504831-d0f3c6e0486e?auto=format&fit=crop&w=900&q=80" alt="Freshly roasted beans in the roaster" loading="lazy"><div class="txt"><b>02</b><h3>Roast</h3><p>Data-logged profiles on our Loring roaster, dialed in for each lot’s unique character.</p></div></article>
+      <article class="reveal"><img src="https://images.unsplash.com/photo-1512568400610-62da28bc8a13?auto=format&fit=crop&w=900&q=80" alt="Latte art" loading="lazy"><div class="txt"><b>03</b><h3>Taste</h3><p>Every batch is cupped before it ships. If it’s not perfect, it doesn’t leave the roastery.</p></div></article>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="container reviews-wrap">
+    <div class="reveal">
+      <span class="eyebrow">Reviews</span>
+      <div class="score" style="margin-top:1rem">4.9</div>
+      <div class="stars" style="font-size:1.2rem;margin:.4rem 0">★★★★★</div>
+      <p class="muted">Based on 14,206 verified reviews</p>
+    </div>
+    <div class="slider reveal">
+      <div class="slides" id="slides">
+        <div class="slide"><blockquote>“Solstice tastes like someone put a blueberry pie in my V60. I’ve never had coffee like this at home.”</blockquote><cite><b>Lauren M.</b> · Verified buyer · Chicago, IL</cite></div>
+        <div class="slide"><blockquote>“The subscription is flawless. Fresh bags show up right before I run out, and the Gesha was worth every penny.”</blockquote><cite><b>Daniel R.</b> · Obsidian Club member · Austin, TX</cite></div>
+        <div class="slide"><blockquote>“Eclipse is the best espresso blend I’ve pulled on my machine. Thick, sweet, chocolatey — café quality.”</blockquote><cite><b>Ashley K.</b> · Verified buyer · San Diego, CA</cite></div>
+      </div>
+      <div class="slider-nav">
+        <button class="icon-btn" id="prev" aria-label="Previous review" style="border-color:var(--line)">←</button>
+        <button class="icon-btn" id="next" aria-label="Next review" style="border-color:var(--line)">→</button>
+        <div class="dots" id="dots"><i class="on"></i><i></i><i></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="journal" style="padding-top:0">
+  <div class="container">
+    <div class="section-head reveal"><div><span class="eyebrow">@obsidian.coffee</span><h2>From the journal</h2></div><p>Brew guides, origin trips and behind-the-scenes from the roastery floor.</p></div>
+    <div class="insta reveal">
+      <a href="#" onclick="toast('Journal posts open in the full CMS build');return false"><img src="https://images.unsplash.com/photo-1609050471053-8636409f9f5b?auto=format&fit=crop&w=500&q=80" alt="Espresso extraction" loading="lazy"></a>
+      <a href="#" onclick="toast('Journal posts open in the full CMS build');return false"><img src="https://images.unsplash.com/photo-1541469406036-71229832e06e?auto=format&fit=crop&w=500&q=80" alt="Pour-over" loading="lazy"></a>
+      <a href="#" onclick="toast('Journal posts open in the full CMS build');return false"><img src="https://images.unsplash.com/photo-1773118360501-00f979fd9322?auto=format&fit=crop&w=500&q=80" alt="Roasted beans" loading="lazy"></a>
+      <a href="#" onclick="toast('Journal posts open in the full CMS build');return false"><img src="https://images.unsplash.com/photo-1553292218-4892c2e7e1ae?auto=format&fit=crop&w=500&q=80" alt="Portafilters" loading="lazy"></a>
+      <a href="#" onclick="toast('Journal posts open in the full CMS build');return false"><img src="https://images.unsplash.com/photo-1771736385651-c071580a9d78?auto=format&fit=crop&w=500&q=80" alt="Steaming cup" loading="lazy"></a>
+      <a href="#" onclick="toast('Journal posts open in the full CMS build');return false"><img src="https://images.unsplash.com/photo-1758221054731-744af4bf4d68?auto=format&fit=crop&w=500&q=80" alt="Coffee pouring" loading="lazy"></a>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="container">
+    <div class="news reveal">
+      <span class="eyebrow">The Inner Circle</span>
+      <h2>First access to reserve lots</h2>
+      <p>Our rarest coffees sell out in hours. Subscribers hear first — plus 10% off your first order.</p>
+      <form id="newsForm" novalidate><input type="email" placeholder="Your email address" aria-label="Email address" required><button class="btn btn-gold">Join the List</button></form>
+    </div>
+  </div>
+</section>
+</main>
+
+<div id="footer"></div>
+<script src="assets/app.js"></script>
+<script>
+document.getElementById('featured').innerHTML = PRODUCTS.slice(0, 4).map(productCard).join('');
+const notes = [...new Set(PRODUCTS.flatMap(p => p.notes))];
+document.getElementById('notesTicker').innerHTML = [...notes, ...notes].map(n => `<span>${n}</span>`).join('');
+// review slider
+let s = 0; const slides = document.getElementById('slides'), dots = [...document.querySelectorAll('#dots i')];
+const go = n => { s = (n + 3) % 3; slides.style.transform = `translateX(-${s * 100}%)`; dots.forEach((d, i) => d.classList.toggle('on', i === s)); };
+document.getElementById('prev').onclick = () => { go(s - 1); clearInterval(auto); };
+document.getElementById('next').onclick = () => { go(s + 1); clearInterval(auto); };
+const auto = setInterval(() => go(s + 1), 6000);
+document.getElementById('newsForm').addEventListener('submit', e => {
+  e.preventDefault(); const inp = e.target.querySelector('input');
+  if (!/^\S+@\S+\.\S+$/.test(inp.value)) { inp.focus(); toast('Please enter a valid email'); return; }
+  e.target.reset(); toast('Welcome! Your 10% code: WELCOME10');
+});
+observeReveals();
+</script>
+</body>
+</html>

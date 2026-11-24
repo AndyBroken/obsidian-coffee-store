@@ -1,3 +1,4 @@
+/*! © 2026 Andrey (github.com/AndyBroken). All rights reserved. Concept / demo project, see LICENSE. */
 /* ===== Obsidian Coffee — shared app logic (cart, theme, layout) ===== */
 const IMG = (id, w = 900) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=80`;
 const money = n => '$' + n.toFixed(2);
@@ -126,7 +127,7 @@ document.getElementById('footer').outerHTML = `
       <div><h5>Company</h5><ul><li><a href="index.html#process">Our Craft</a></li><li><a href="index.html#journal">Journal</a></li><li><a href="#" onclick="toast('Wholesale portal — coming soon');return false">Wholesale</a></li></ul></div>
       <div><h5>Help</h5><ul><li><a href="#" onclick="toast('Ships within 24h · 2–5 day delivery');return false">Shipping</a></li><li><a href="#" onclick="toast('30-day freshness guarantee');return false">Returns</a></li><li><a href="mailto:hello@obsidian.example">hello@obsidian.example</a></li></ul></div>
     </div>
-    <div class="foot-bottom"><span>© ${new Date().getFullYear()} Obsidian Coffee Roasters · Concept website · Demo project</span><div class="pay-icons"><span>VISA</span><span>MC</span><span>AMEX</span><span>PAY</span></div></div>
+    <div class="foot-bottom"><span>© ${new Date().getFullYear()} Obsidian Coffee Roasters · Concept website · Demo project · Design &amp; code © 2026 Andrey (AndyBroken)</span><div class="pay-icons"><span>VISA</span><span>MC</span><span>AMEX</span><span>PAY</span></div></div>
   </div>
 </footer>
 <div class="overlay" id="overlay"></div>

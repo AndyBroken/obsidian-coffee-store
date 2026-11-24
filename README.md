@@ -13,3 +13,7 @@ Full e-commerce storefront for a luxury specialty coffee brand.
 **Tech:** HTML5, CSS3 (custom properties, grid), vanilla JavaScript — no frameworks. Ready to connect to Shopify / Stripe.
 
 *Concept / demo project — Obsidian is a fictional brand. No payments are processed.*
+
+## License
+
+© 2026 Andrey ([AndyBroken](https://github.com/AndyBroken)). All rights reserved. This is a portfolio demo: you may view it, but not copy or reuse the code or design. See [LICENSE](LICENSE).
